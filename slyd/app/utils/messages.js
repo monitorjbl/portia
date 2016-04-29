@@ -6,6 +6,7 @@ export default Ember.Object.create({
     follow_links: 'Links that match any of the regular expressions in this list will be followed (they should also be in the same domain of one of the start pages).',
     exclude_links: 'Links that match any of the regular expressions in this list will be excluded.',
     perform_login: 'Select this option if the site you are crawling requires login credentials.',
+    basic_auth: 'Add authentication details to every request using the Basic Auth header',
     template_required: 'This setting is equivalent to marking the fields as required in the item definition, but limiting the scope to this sample only. <div class="alert alert-info"><span class="fa fa-icon fa-info-circle"></span> Only extracted fields can be set as required.</div>',
     extractors: 'With <b>regular expression extractors</b>, the extracted data is matched against the specified expression and replaced by the match group enclosed between parentheses. If there is no match, the field is not extracted.<br/><br/><b>Type extractors</b> override the type specified in the item definition.',
     select_item: 'You can choose what item type is extracted by this sample using the combobox. You can also create and modify items by clicking on the Edit Items button.',

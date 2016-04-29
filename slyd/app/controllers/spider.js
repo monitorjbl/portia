@@ -34,6 +34,11 @@ export default BaseController.extend({
     editAllStartUrlsAction: 'editAllStartUrls',
     editAllStartUrlsText: 'Edit All',
 
+    loginMethods: [
+        {value:'basic_auth', label:'Basic Authorization'},
+        {value:'login', label:'Login Form'}
+    ],
+
     followPatternOptions: [
         { value: 'all', label: 'Follow all in-domain links' },
         { value: 'none', label: "Don't follow links" },
@@ -104,6 +109,10 @@ export default BaseController.extend({
     testButtonLabel: function() {
         return this.get('testing') ? "Stop testing" : "Test spider";
     }.property('testing'),
+
+    login_methods: function(key, what){
+        console.log(key, what);
+    },
 
     links_to_follow: function(key, follow) {
         // The spider spec only supports 'patterns' or 'none' for the

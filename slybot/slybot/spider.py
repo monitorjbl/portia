@@ -80,6 +80,10 @@ class IblSpider(SitemapSpider):
                                   dont_filter=True)
                 self._add_splash_meta(request)
                 self.login_requests.append(request)
+            elif rdata["type"] == "basic_auth":
+                self.http_user = rdata["username"]
+                self.http_pass = rdata["password"]
+                self.name = rdata["hostname"]
             elif rdata["type"] == "form":
                 self.form_requests.append(
                     self.get_generic_form_start_request(rdata)

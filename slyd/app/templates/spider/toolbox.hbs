@@ -58,11 +58,17 @@
                 {{text-field value=loginPassword name='loginPassword' width='94%' placeholder='Login password' action='updateLoginInfo' update='addInitRequest'}}
             </div>
         {{/if}}
+
+        <div style="margin-top:20px" class="scrolling-container">
+            <span class="important-label">Basic Auth</span>
+            {{!-- {{check-box checked=model.basicAuth name="addBasicAuth"}} --}}
+            {{!-- {{inline-help message="basic_auth"}} --}}
+        </div>
     {{/accordion-item}}
 
     {{#accordion-item title="Crawling"}}
         <div class="scrolling-container" {{bind-attr style="mid_box_style"}}>
-            {{item-select options=followPatternOptions value=controller.links_to_follow}}
+            {{item-select options=./app/controllers/spider.js value=controller.links_to_follow}}
             <div style="margin-top:10px">
                 {{check-box checked=showLinks name="showLinks"}}
                 <span class="important-label">Overlay blocked links</span>

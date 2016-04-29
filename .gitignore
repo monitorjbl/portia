@@ -5,7 +5,7 @@
 # Python build files
 *.egg-info
 slybot/dist
-slyd/slyd/dist
+slyd/dist
 
 # npm files
 node_modules/*
