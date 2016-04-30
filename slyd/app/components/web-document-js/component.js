@@ -169,6 +169,7 @@ export default WebDocument.extend({
                 viewport: this.iframeSize(),
                 user_agent: navigator.userAgent,
                 cookies: this.cookies,
+                basic_auth: this.get('slyd.basic_auth')
             },
             _command: 'load',
             url: url,

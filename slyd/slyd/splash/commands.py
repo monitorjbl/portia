@@ -2,6 +2,7 @@ from __future__ import absolute_import
 import hashlib
 import json
 import re
+import base64
 import socket as _socket
 import six.moves.urllib_parse as urlparse
 import traceback
@@ -27,6 +28,7 @@ _VIEWPORT_RE = re.compile('^\d{3,5}x\d{3,5}$')
 @open_tab
 def load_page(data, socket):
     """Load page in virtual url from provided url"""
+    print(socket.tab)
     if 'url' not in data:
         return {'error': 4001, 'message': 'Required parameter url'}
 
@@ -47,6 +49,9 @@ def load_page(data, socket):
     headers = {}
     if "user_agent" in meta:
         headers['User-Agent'] = meta['user_agent']
+    if "basic_auth" in meta:
+        creds = meta['basic_auth']
+        headers['Authorization'] = 'Basic '+base64.b64encode(creds['username']+':'+creds['password'])
 
     socket.tab.go(data['url'],
                   lambda: on_complete(False),

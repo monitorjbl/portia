@@ -52,18 +52,36 @@ export default SimpleModel.extend({
                 this.set('loginUrl', '');
                 this.set('loginUser', '');
                 this.set('loginPassword', '');
-                this.get('init_requests').setObjects([]);
+                if(!this.get('init_requests')){
+                    this.get('init_requests').setObjects([]);
+                }
             }
         }
-        return !Ember.isEmpty(this.get('init_requests'));
+        return !Ember.isEmpty(this.get('init_requests')) && this.get('init_requests')[0].type == 'login';
     }.property('init_requests'),
+
+    basicAuth: function (key, basicAuth) {
+        if (arguments.length > 1) {
+            if (basicAuth) {
+                this.get('init_requests').setObjects([{ type: 'basic_auth' }]);
+            } else {
+                this.set('basicHost', '');
+                this.set('basicUser', '');
+                this.set('basicPassword', '');
+                if(!this.get('init_requests')){
+                    this.get('init_requests').setObjects([]);
+                }     
+            }
+        }
+        return !Ember.isEmpty(this.get('init_requests')) && this.get('init_requests')[0].type == 'basic_auth';
+    }.property('init_requests'),     
 
     loginUrl: function(key, loginUrl) {
         var reqs = this.get('init_requests');
         if (arguments.length > 1) {
             reqs[0]['loginurl'] = loginUrl;
         }
-        return reqs.length ? reqs[0]['loginurl'] : null;
+        return reqs.length && reqs[0].type == 'login' ? reqs[0]['loginurl'] : null;
     }.property('init_requests'),
 
     loginUser: function(key, loginUser) {
@@ -71,7 +89,7 @@ export default SimpleModel.extend({
         if (arguments.length > 1) {
             reqs[0]['username'] = loginUser;
         }
-        return reqs.length ? reqs[0]['username'] : null;
+        return reqs.length && reqs[0].type == 'login' ? reqs[0]['username'] : null;
     }.property('init_requests'),
 
     loginPassword: function(key, loginPassword) {
@@ -79,6 +97,30 @@ export default SimpleModel.extend({
         if (arguments.length > 1) {
             reqs[0]['password'] = loginPassword;
         }
-        return reqs.length ? reqs[0]['password'] : null;
+        return reqs.length && reqs[0].type == 'login' ? reqs[0]['password'] : null;
     }.property('init_requests'),
+
+    basicHost: function(key, basicHost) {
+        var reqs = this.get('init_requests');
+        if (arguments.length > 1) {
+            reqs[0]['hostname'] = basicHost;
+        }
+        return reqs.length && reqs[0].type == 'basic_auth' ? reqs[0]['hostname'] : null;
+    }.property('init_requests'),
+
+    basicUser: function(key, basicUser) {
+        var reqs = this.get('init_requests');
+        if (arguments.length > 1) {
+            reqs[0]['username'] = basicUser;
+        }
+        return reqs.length && reqs[0].type == 'basic_auth' ? reqs[0]['username'] : null;
+    }.property('init_requests'),
+
+    basicPassword: function(key, basicPassword) {
+        var reqs = this.get('init_requests');
+        if (arguments.length > 1) {
+            reqs[0]['password'] = basicPassword;
+        }
+        return reqs.length && reqs[0].type == 'basic_auth' ? reqs[0]['password'] : null;
+    }.property('init_requests')
 });

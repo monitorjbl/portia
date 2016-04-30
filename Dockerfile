@@ -30,4 +30,5 @@ EXPOSE 9001
 WORKDIR /app/slyd
 
 # TODO(dangra): fix handling of nginx service, it won't be restarted in case if crashed.
+# ember build -e production && bin/slyd -p 9002 -r /app/slyd/dist
 CMD service nginx start; bin/slyd -p 9002 -r /app/slyd/dist

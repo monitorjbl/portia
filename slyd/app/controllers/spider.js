@@ -34,11 +34,6 @@ export default BaseController.extend({
     editAllStartUrlsAction: 'editAllStartUrls',
     editAllStartUrlsText: 'Edit All',
 
-    loginMethods: [
-        {value:'basic_auth', label:'Basic Authorization'},
-        {value:'login', label:'Login Form'}
-    ],
-
     followPatternOptions: [
         { value: 'all', label: 'Follow all in-domain links' },
         { value: 'none', label: "Don't follow links" },
@@ -110,10 +105,6 @@ export default BaseController.extend({
         return this.get('testing') ? "Stop testing" : "Test spider";
     }.property('testing'),
 
-    login_methods: function(key, what){
-        console.log(key, what);
-    },
-
     links_to_follow: function(key, follow) {
         // The spider spec only supports 'patterns' or 'none' for the
         // 'links_to_follow' attribute; 'all' is only used for UI purposes.
@@ -145,15 +136,39 @@ export default BaseController.extend({
     },
 
     loginUrl: function() {
-        return this._get_init_request_property('loginurl');
+        if(this._get_init_request_property('type') == 'login'){
+            return this._get_init_request_property('loginurl');
+        }
     }.property('model.init_requests'),
 
     loginUser: function() {
-        return this._get_init_request_property('username');
+        if(this._get_init_request_property('type') == 'login'){
+            return this._get_init_request_property('username');
+        }
     }.property('model.init_requests'),
 
     loginPassword: function() {
-        return this._get_init_request_property('password');
+        if(this._get_init_request_property('type') == 'login'){
+            return this._get_init_request_property('password');
+        }
+    }.property('model.init_requests'),
+
+    basicHost: function() {
+        if(this._get_init_request_property('type') == 'basic_auth'){
+            return this._get_init_request_property('hostname');
+        }
+    }.property('model.init_requests'),
+
+    basicUser: function() {
+        if(this._get_init_request_property('type') == 'basic_auth'){
+            return this._get_init_request_property('username');
+        }
+    }.property('model.init_requests'),
+
+    basicPassword: function() {
+        if(this._get_init_request_property('type') == 'basic_auth'){
+            return this._get_init_request_property('password');
+        }
     }.property('model.init_requests'),
 
     spiderDomains: function() {
@@ -227,6 +242,8 @@ export default BaseController.extend({
     },
 
     loadUrl: function(url, baseUrl) {
+        var basic = $.grep(this.get('model').init_requests || [], function(v){return v.type == 'basic_auth'});
+        if(basic.length > 0){ this.set('slyd.basic_auth', {username: basic[0].username, password: basic[0].password}) }
         this.get('documentView').loadUrl(url, this.get('model.name'), baseUrl);
     },
 
@@ -531,6 +548,10 @@ export default BaseController.extend({
             Ember.run.once(this, 'saveSpider');
         },
 
+        updateBasicAuthInfo: function() {
+            Ember.run.once(this, 'saveSpider');
+        },
+
         addInitRequest: function(value, field) {
             if (field) {
                 this.set(field, value);
@@ -540,6 +561,13 @@ export default BaseController.extend({
                         "loginurl": utils.cleanUrl(this.get('loginUrl')),
                         "username": this.get('loginUser'),
                         "password": this.get('loginPassword')
+                    }]);
+                } else if (this.get('basicHost') && this.get('basicUser') && this.get('basicPassword')) {
+                    this.set('model.init_requests', [{
+                        "type": "basic_auth",
+                        "hostname": this.get('basicHost'),
+                        "username": this.get('basicUser'),
+                        "password": this.get('basicPassword')
                     }]);
                 }
             }

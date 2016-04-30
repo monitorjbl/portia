@@ -59,16 +59,28 @@
             </div>
         {{/if}}
 
+
         <div style="margin-top:20px" class="scrolling-container">
             <span class="important-label">Basic Auth</span>
-            {{!-- {{check-box checked=model.basicAuth name="addBasicAuth"}} --}}
-            {{!-- {{inline-help message="basic_auth"}} --}}
+            {{check-box checked=model.basicAuth name="basicAuth"}}
+            {{inline-help message="basic_auth"}}
         </div>
+
+        {{#if model.basicAuth}}
+            <div class="scrolling-container" {{bind-attr style="ex_tiny_box_style"}}>
+                <div style="margin-top:10px"></div>
+                {{text-field value=basicHost name='basicHost' width='94%' placeholder='Hostname' action='updateBasicAuthInfo' update='addInitRequest'}}
+                <div style="margin-top:5px"></div>
+                {{text-field value=basicUser name='basicUser' width='94%' placeholder='Username' action='updateBasicAuthInfo' update='addInitRequest'}}
+                <div style="margin-top:5px"></div>
+                {{text-field value=basicPassword name='basicPassword' width='94%' placeholder='Password' action='updateBasicAuthInfo' update='addInitRequest'}}
+            </div>
+        {{/if}}
     {{/accordion-item}}
 
     {{#accordion-item title="Crawling"}}
         <div class="scrolling-container" {{bind-attr style="mid_box_style"}}>
-            {{item-select options=./app/controllers/spider.js value=controller.links_to_follow}}
+            {{item-select options=followPatternOptions value=controller.links_to_follow}}
             <div style="margin-top:10px">
                 {{check-box checked=showLinks name="showLinks"}}
                 <span class="important-label">Overlay blocked links</span>
@@ -204,7 +216,7 @@
 {{/closable-accordion}}
 
 <div class="btn-center">
-		{{#bs-button clicked="testSpider" clickedParam=this icon="fa fa-icon fa-check" type="primary" title="Tests the spider on every start URL."}}
-			{{controller.testButtonLabel}}
-		{{/bs-button}}
+        {{#bs-button clicked="testSpider" clickedParam=this icon="fa fa-icon fa-check" type="primary" title="Tests the spider on every start URL."}}
+            {{controller.testButtonLabel}}
+        {{/bs-button}}
 </div>

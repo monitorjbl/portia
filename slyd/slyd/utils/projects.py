@@ -19,9 +19,19 @@ def clean_spider(obj):
     if 'init_requests' in obj:
         if obj['init_requests'] is None:
             obj['init_requests'] = []
-        required_fields = ('type', 'loginurl', 'username', 'password')
-        obj['init_requests'] = [req for req in obj['init_requests']
-                                if all(f in req for f in required_fields)]
+        else:
+            cleaned_requests = []
+            for req in obj['init_requests']:
+                req_type = req['type']
+                if req_type == 'login':
+                    required_fields = ('type', 'loginurl', 'username', 'password')
+                elif req_type == 'basic_auth':
+                    required_fields = ('type', 'hostname', 'username', 'password')
+                else:
+                    raise Exception('Unknown type of init_request '+req_type)
+                if all(f in req for f in required_fields):
+                    cleaned_requests.append(req)
+            obj['init_requests'] = cleaned_requests
     if 'start_urls' in obj:
         obj['start_urls'] = list(ODict([(x, 1) for x in obj['start_urls']]))
     # XXX: Need id to keep track of renames for deploy and export
